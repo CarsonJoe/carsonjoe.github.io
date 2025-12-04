@@ -1,610 +1,1369 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Carson Gragg</title>
-    <link rel="icon" type="image/svg+xml" href="/Group 59.svg">
+    <link rel="icon" type="image/svg+xml" href="/Group 59.svg" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
 
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-            font-size: small;
-        }
+      body {
+        background-color: #f5f5f5;
+        color: #333;
+        font-size: small;
+        overflow-x: hidden;
+      }
 
-        h4 {
-            font-size: 1.125rem;
-            line-height: 1.75rem;
-            font-weight: 600;
-            margin-bottom: 10px;
+      /* Main scroll container */
+      .scroll-container {
+        scroll-snap-type: y mandatory;
+        overflow-y: scroll;
+        height: 100vh;
+      }
+
+      /* Section styles */
+      .section {
+        min-height: 100vh;
+        scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem;
+      }
+
+      .section-content {
+        max-width: 800px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      h4 {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        max-width: 800px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .header {
+        margin-bottom: 2rem;
+      }
+
+      .title {
+        font-size: 5rem;
+        font-weight: 500;
+        line-height: 1.1;
+        color: #5b595c;
+      }
+
+      .gradient-text {
+        background: linear-gradient(
+          90deg,
+          #70798e 0% 15%,
+          #a993b0 15% 48%,
+          #e39594 48% 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .about {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .about span {
+        height: 110px;
+      }
+
+      .profile {
+        flex-basis: 150px;
+        flex-grow: 0;
+        flex-shrink: 0;
+        order: 2;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .profile-image {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: #ddd;
+      }
+
+      .profile-info h2 {
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .profile-info p {
+        color: #666;
+      }
+
+      .description {
+        margin: 20px;
+        display: flex;
+        align-items: center;
+        flex-basis: 320px;
+        flex-grow: 1;
+        order: 3;
+        color: #7c747c;
+      }
+
+      .nav-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        margin-bottom: 4rem;
+      }
+
+      .nav-item {
+        padding-top: 1rem;
+      }
+
+      .nav-item h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #5b595c;
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+      }
+
+      .content-section {
+        border-top: 2px solid #ddd;
+        margin-top: 15px;
+        padding-top: 15px;
+        color: #666;
+      }
+
+      .content-section p {
+        margin-bottom: 0.5rem;
+      }
+
+      .icon-link {
+        color: #5b595c;
+        text-decoration: none;
+      }
+
+      .icon-link svg {
+        height: 1.5rem;
+      }
+
+      /* Section title styles */
+      .modal-title {
+        font-size: 2rem;
+        color: #5b595c;
+      }
+
+      .circle {
+        width: 10px;
+        height: 10px;
+        background-color: #3b82f6;
+        border-radius: 50%;
+        margin-right: 12px;
+      }
+
+      /* Project link styles */
+      .project-link {
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .project-link:hover {
+        color: #a993b0;
+      }
+
+      /* Left navigation bar */
+      .nav-bar {
+        position: fixed;
+        left: 2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .nav-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: #ddd;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .nav-dot:hover {
+        background-color: #a993b0;
+        transform: scale(1.2);
+      }
+
+      .nav-dot.active {
+        background-color: #5b595c;
+        transform: scale(1.3);
+      }
+
+      /* Hide nav bar on landing */
+      body.on-landing .nav-bar {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      @media (max-width: 768px) {
+        .about span {
+          height: 50px;
         }
 
         .container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
-            height: 100vh;
-            transition: transform .5s cubic-bezier(0.28, 0, 0.65, 1);
-            transition-delay: .08s;
-        }
-
-        .container.modal-open {
-            transform: translateY(-100vh);
-        }
-
-        .header {
-            margin-bottom: 2rem;
-        }
-
-        .title {
-            font-size: 5rem;
-            font-weight: 500;
-            line-height: 1.1;
-            color: #5b595c;
-        }
-
-        .gradient-text {
-            background: linear-gradient(90deg, #70798e 0% 15%, #a993b0 15% 48%, #e39594 48% 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .about {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .about span {
-            height: 110px;
+          height: 100%;
         }
 
         .profile {
-            flex-basis: 150px;
-            flex-grow: 0;
-            flex-shrink: 0;
-            order: 2;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+          margin: 20px;
+          flex-basis: 300px;
         }
 
-        .profile-image {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background-color: #ddd;
-        }
-
-        .profile-info h2 {
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        .profile-info p {
-            color: #666;
-        }
-
-        .description {
-            margin: 20px;
-            display: flex;
-            align-items: center;
-            flex-basis: 320px;
-            flex-grow: 1;
-            order: 3;
-            color: #7c747c;
-        }
-
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .nav-item {
-            padding-top: 1rem;
-        }
-
-        .nav-item h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #5b595c;
-        }
-
+        .nav-grid,
         .content-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
+          grid-template-columns: repeat(2, 1fr);
         }
 
-        .content-section {
-            border-top: 2px solid #ddd;
-            margin-top: 15px;
-            padding-top: 15px;
-            color: #666;
+        .title {
+          font-size: 3rem;
         }
 
-        .content-section p {
-            margin-bottom: 0.5rem;
+        .nav-bar {
+          left: 1rem;
         }
 
-        .icon-link {
-            color: #5b595c;
-            text-decoration: none;
+        .section {
+          padding: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .nav-grid,
+        .content-grid {
+          grid-template-columns: 1fr;
         }
 
-        .icon-link svg {
-            height: 1.5rem;
+        .container {
+          justify-content: start;
         }
 
-        /* Modal styles */
-        .modal {
-            position: fixed;
-            bottom: -100vh;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            padding: 2rem;
-            transition: transform .5s cubic-bezier(0.31, -0.01, 0.65, 0.99);
-            z-index: 1000;
-            background-color: #f5f5f5;
+        .title {
+          font-size: 2.3rem;
         }
-
-        .modal.open {
-            transform: translateY(-100vh);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .modal-title {
-            font-size: 2rem;
-            color: #5b595c;
-        }
-
-        .close-button {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #5b595c;
-            padding: 0.5rem;
-        }
-
-        .modal-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .circle {
-            width: 10px;
-            height: 10px;
-            background-color: #3b82f6;
-            border-radius: 50%;
-            margin-right: 12px;
-        }
-
-        /* Project link styles */
-        .project-link {
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .project-link:hover {
-            color: #a993b0;
-        }
-
-
-        @media (max-width: 768px) {
-            .about span {
-                height: 50px;
-            }
-
-            .container {
-                height: 100%;
-            }
-
-            .profile {
-                margin: 20px;
-                flex-basis: 300px;
-            }
-
-            .nav-grid,
-            .content-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .title {
-                font-size: 3rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-
-            .nav-grid,
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .container {
-
-                justify-content: start;
-            }
-
-            .title {
-                font-size: 2.3rem;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
-    <div class="container">
-        <header class="header">
-            <span class="title">
-                Carson Gragg<br>
-                F<span class="gradient-text">ullStack Software</span><br>
-            </span>
-            <div class="about">
-
-                <span class="title">
-                    Dev.
-                </span>
-
-                <div class="profile">
-                    <div class="profile-image"></div>
-                    <div class="profile-info">
-                        <p>Location:</p>
-                        <h2>Bay Area</h2>
-                    </div>
-                </div>
-
-                <p class="description">
-                    Passionate about creating seamless digital experiences that combine beautiful design with powerful
-                    functionality.
-                </p>
-
-            </div>
-
-        </header>
-
-        <nav class="nav-grid">
-            <div class="nav-item">
-                <h3>Skills</h3>
-
-                <div class="content-section">
-                    <p>Frontend Development</p>
-                    <p>UI/UX Design</p>
-                    <p>React / Next.js</p>
-                </div>
-            </div>
-            <div class="nav-item">
-                <h3>Projects</h3>
-                <div class="content-section">
-                    <p class="project-link" data-project="cogniboom">Cogniboom</p>
-                    <p class="project-link" data-project="fragment">Fragment Memory</p>
-                    <p class="project-link" data-project="chromatography">Chromatography</p>
-                </div>
-            </div>
-            <div class="nav-item">
-                <h3>Experience</h3>
-                <div class="content-section">
-                    <p class="project-link" data-project="energy">Sustainable Energy Model</p>
-                    <p class="project-link" data-project="construction">Construction Search DB</p>
-                </div>
-            </div>
-            <div class="nav-item">
-                <h3>Contact</h3>
-
-                <div class="content-section">
-                    <p>CarsonGragg@gmail.com</p>
-                    <p>925 818 6745</p>
-                    <a href="https://github.com/carsonjoe" class="icon-link" target="_blank" rel="noopener noreferrer">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path fill="currentColor"
-                                d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z" />
-                        </svg>
-                    </a>
-                    <a href="https://www.youtube.com/@graggie325" class="icon-link" target="_blank"
-                        rel="noopener noreferrer">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path fill="currentColor"
-                                d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                        </svg>
-                    </a>
-                    <a href="https://www.linkedin.com/in/carson-gragg" class="icon-link" target="_blank" rel="noopener noreferrer">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path fill="currentColor" 
-                                d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </nav>
+  <body class="on-landing">
+    <!-- Left Navigation Bar -->
+    <div class="nav-bar">
+      <div class="nav-dot" data-section="0" title="Home"></div>
+      <div class="nav-dot" data-section="1" title="Cogniboom"></div>
+      <div class="nav-dot" data-section="2" title="Stellar Page"></div>
+      <div class="nav-dot" data-section="3" title="PhotoShare"></div>
+      <div class="nav-dot" data-section="4" title="Somna Studio"></div>
+      <div class="nav-dot" data-section="5" title="Construction DB"></div>
+      <div class="nav-dot" data-section="6" title="Four Friends Mahjong"></div>
+      <div class="nav-dot" data-section="7" title="Contact"></div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Project Title</h2>
-                <button class="close-button">×</button>
+    <!-- Scroll Container -->
+    <div class="scroll-container" id="scrollContainer">
+      <!-- Landing Section -->
+      <section class="section" id="landing">
+        <div class="container">
+          <header class="header">
+            <span class="title">
+              Carson Gragg<br />
+              F<span class="gradient-text">ullStack Software</span><br />
+            </span>
+            <div class="about">
+              <span class="title"> Dev. </span>
+
+              <div class="profile">
+                <div class="profile-image"></div>
+                <div class="profile-info">
+                  <p>Location:</p>
+                  <h2>Bay Area</h2>
+                </div>
+              </div>
+
+              <p class="description">
+                Passionate about creating seamless digital experiences that
+                combine beautiful design with powerful functionality.
+              </p>
             </div>
-            <div class="modal-body">
-                <!-- Content will be dynamically inserted here -->
+          </header>
+
+          <nav class="nav-grid">
+            <div class="nav-item">
+              <h3>Skills</h3>
+              <div class="content-section">
+                <p>Frontend Development</p>
+                <p>UI/UX Design</p>
+                <p>React / Next.js</p>
+              </div>
             </div>
+            <div class="nav-item">
+              <h3>Projects</h3>
+              <div class="content-section">
+                <p class="project-link" style="cursor: pointer" data-scroll="1">
+                  Cogniboom
+                </p>
+                <p class="project-link" style="cursor: pointer" data-scroll="2">
+                  Stellar Page
+                </p>
+                <p class="project-link" style="cursor: pointer" data-scroll="3">
+                  PhotoShare
+                </p>
+              </div>
+            </div>
+            <div class="nav-item">
+              <h3>Experience</h3>
+              <div class="content-section">
+                <p class="project-link" style="cursor: pointer" data-scroll="4">
+                  Somna Studio
+                </p>
+                <p class="project-link" style="cursor: pointer" data-scroll="5">
+                  Construction Search DB
+                </p>
+                <p class="project-link" style="cursor: pointer" data-scroll="6">
+                  Four Friends Mahjong
+                </p>
+              </div>
+            </div>
+            <div class="nav-item">
+              <h3 class="project-link" style="cursor: pointer" data-scroll="7">
+                Contact
+              </h3>
+              <div class="content-section">
+                <p>CarsonGragg@gmail.com</p>
+                <p>925 818 6745</p>
+                <a
+                  href="https://github.com/carsonjoe"
+                  class="icon-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      fill="currentColor"
+                      d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="https://www.youtube.com/@graggie325"
+                  class="icon-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      fill="currentColor"
+                      d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/carson-gragg"
+                  class="icon-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      fill="currentColor"
+                      d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </nav>
         </div>
+      </section>
+
+      <!-- Cogniboom Section -->
+      <section class="section" id="cogniboom">
+        <div class="section-content">
+          <a
+            href="https://cogniboom.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="text-decoration: none; display: block"
+          >
+            <div style="max-width: 50%; margin: 0 auto; min-width: 200px">
+              <svg
+                viewBox="0 0 903 550"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="658" cy="29" r="29" fill="#797EB5"></circle>
+                <path
+                  d="M297.5 116C285.5 116 275.846 120 266.5 133.5C255.423 149.5 255.1 161.3 259.5 172.5C265 186.5 285 197 309.5 202C326.135 205.395 360 214.5 370.5 197C380.996 179.505 357 148.953 338.5 134.5C322 121.61 313 116 297.5 116Z"
+                  fill="#EC7579"
+                ></path>
+                <path
+                  d="M369.5 49.5C359.5 49.5 352 52 340.5 63C328.5 74.4782 323.086 81.9311 326 99C329.5 119.5 359.5 143 369.5 150C379.5 157 396 161 404.5 156C413 151 416 136.5 417 123C418 109.5 414 88.0001 404.5 72.0001C395 56.0001 379.5 49.5 369.5 49.5Z"
+                  fill="#F7C848"
+                ></path>
+                <path
+                  d="M520.5 57.5001C533.5 49.5003 548.5 50.5001 564 66.0003C578 78.0005 578 86.2001 578 95.0001C578 106 574.489 117.489 563.5 128C552 139 531 158.525 514.5 161C498 163.475 483.5 159 484.5 126C485.5 93.0003 506.986 65.8161 520.5 57.5001Z"
+                  fill="#797DB5"
+                ></path>
+                <path
+                  d="M646.877 165.394C647.352 155.405 645.665 148.317 634.771 135.785C623.876 123.253 611.688 122.9 594.5 125C573.857 127.521 549.468 151.344 542 161C534.533 170.656 524.251 185.5 531.5 199.284C536.09 208.013 557 209.346 571.201 209.346C584.738 209.346 605.551 206.415 622.738 199.284C641.5 191.5 646.401 175.382 646.877 165.394Z"
+                  fill="#269DCF"
+                ></path>
+                <path
+                  d="M609.5 432.5C619 427.5 626.806 422.697 633.5 407.5C638.566 396 637.5 383.861 628.938 370.259C617.859 352.659 585.914 340.748 573.996 338.108C562.079 335.468 546.5 334.5 538 342C528.5 350.382 533.948 376.153 540 389C548.5 407.042 560.312 423.572 574 432.5C585.5 440 600.651 437.158 609.5 432.5Z"
+                  fill="#787CB6"
+                ></path>
+                <path
+                  d="M493.079 478.402C503.507 480.951 512.537 482.526 527.619 475.579C539.033 470.322 544.432 462.777 547.5 447C551 429 541 407.5 531 391C524.673 380.561 510.825 363.258 499.489 363.244C486.82 363.228 473.825 386.139 469.846 399.772C464.258 418.917 462.152 439.124 466.49 454.88C470.134 468.117 483.365 476.027 493.079 478.402Z"
+                  fill="#787CB6"
+                ></path>
+                <path
+                  d="M382.5 478.5C392.5 482.663 401.808 486.432 417.5 481C430.5 476.5 438.538 469.616 444 454.5C450.232 437.255 443.156 414.656 435.818 396.812C431.175 385.523 421 366.5 408.5 365.5C392.5 364.22 380.532 383.956 374.5 396.812C366.029 414.868 358.642 435.263 360.5 451.5C362.061 465.14 373.268 474.657 382.5 478.5Z"
+                  fill="#F6C747"
+                ></path>
+                <path
+                  d="M271.5 409.5C275 421 285.5 432.944 296 438C308.5 444.019 318.825 445.946 332.5 437.5C349.5 427 361.132 407.332 368.5 389.5C373.162 378.219 378 358 370.742 347.202C361.789 333.88 335.5 339 313 350.001C313 350.001 305.558 363.82 298 370.001C290.019 376.527 274 381.001 274 381.001C269 389.5 268.588 399.933 271.5 409.5Z"
+                  fill="#F7AC55"
+                ></path>
+                <path
+                  d="M750 320V234H764.5V245C765 246.5 766.5 245.5 767.5 244.5C768.291 243.709 772.5 240.5 776 238.5C779.5 236.5 785 234 794.5 234C823.7 234 833 257.333 834 269V320H819V272C818 264.5 811.4 249.5 793 249.5C774.6 249.5 766.667 264.5 765 272V320H750Z"
+                  fill="#282A31"
+                ></path>
+                <path
+                  d="M819 320V261.5C819.791 260.709 828.5 248.5 837.5 242C846.5 235.5 854 234 863.5 234C892.7 234 902 257.333 903 269V320H888V272C887 264.5 880.4 249.5 862 249.5C843.6 249.5 835.667 264.5 834 272V320H819Z"
+                  fill="#282A31"
+                ></path>
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M691 322.5C715.853 322.5 736 302.353 736 277.5C736 252.647 715.853 232.5 691 232.5C666.147 232.5 646 252.647 646 277.5C646 302.353 666.147 322.5 691 322.5ZM691.495 306.676C707.335 306.676 720.176 293.835 720.176 277.995C720.176 262.154 707.335 249.313 691.495 249.313C675.654 249.313 662.813 262.154 662.813 277.995C662.813 293.835 675.654 306.676 691.495 306.676Z"
+                  fill="#282A31"
+                ></path>
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M593 322.5C617.853 322.5 638 302.353 638 277.5C638 252.647 617.853 232.5 593 232.5C568.147 232.5 548 252.647 548 277.5C548 302.353 568.147 322.5 593 322.5ZM593.495 306.676C609.335 306.676 622.176 293.835 622.176 277.995C622.176 262.154 609.335 249.313 593.495 249.313C577.654 249.313 564.813 262.154 564.813 277.995C564.813 293.835 577.654 306.676 593.495 306.676Z"
+                  fill="#282A31"
+                ></path>
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M495 322.5C519.853 322.5 540 302.353 540 277.5C540 252.647 519.853 232.5 495 232.5C470.147 232.5 450 252.647 450 277.5C450 302.353 470.147 322.5 495 322.5ZM495.495 306.676C511.335 306.676 524.176 293.835 524.176 277.995C524.176 262.154 511.335 249.313 495.495 249.313C479.654 249.313 466.813 262.154 466.813 277.995C466.813 293.835 479.654 306.676 495.495 306.676Z"
+                  fill="#282A31"
+                ></path>
+                <path
+                  d="M450 209.5V277L468 250V198.5L450 209.5Z"
+                  fill="#282A31"
+                ></path>
+                <path d="M418 242V320H435.5V234L418 242Z" fill="#282A31"></path>
+                <circle cx="427" cy="211" r="12" fill="#282A31"></circle>
+                <path
+                  d="M317 320V234H331.5V245C332 246.5 333.5 245.5 334.5 244.5C335.291 243.709 339.5 240.5 343 238.5C346.5 236.5 352 234 361.5 234C390.7 234 400 257.333 401 269V320H386V272C385 264.5 378.4 249.5 360 249.5C341.6 249.5 333.667 264.5 332 272V320H317Z"
+                  fill="#282A31"
+                ></path>
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M260.5 318.5C283.972 318.5 303 299.472 303 276C303 252.528 283.972 233.5 260.5 233.5C237.028 233.5 218 252.528 218 276C218 299.472 237.028 318.5 260.5 318.5ZM261 302C275.359 302 287 290.359 287 276C287 261.641 275.359 250 261 250C246.641 250 235 261.641 235 276C235 290.359 246.641 302 261 302Z"
+                  fill="#282A31"
+                ></path>
+                <path
+                  d="M284 325C282 320.2 276.5 317 274 316L287.5 307.5C289.667 309 294.3 312.4 295.5 314C297 316 302 318.5 302 333C302 347.5 292 358 288 361C284 364 274.5 369 262 369C249.5 369 240.5 364 235.5 360C230.5 356 224 349 224 339C224 329 225 326 227 324.5C229 323 229.5 322.5 234.5 322.5C238.5 322.5 241.833 324.5 243 325.5C243.833 325.833 245 327.1 243 329.5C241 331.9 239.833 336.167 239.5 338C239.5 348.8 253.833 351.833 261 352C264.667 352.5 273.4 352.1 279 346.5C286 339.5 286.5 331 284 325Z"
+                  fill="#282A31"
+                ></path>
+                <path
+                  d="M290 240.5C287.757 241.141 288.167 243.833 289 245C283.333 241.833 272.6 235.7 275 236.5C278 237.5 279.5 235.5 280.5 233C281.5 230.5 283 226 285 223C287 220 291.5 216.5 296.5 216.5C301.5 216.5 304.5 220.5 304.5 224C304.5 227.5 302.5 231.5 299.5 235C296.5 238.5 293.5 239.5 290 240.5Z"
+                  fill="#282A31"
+                ></path>
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M164 322.5C188.853 322.5 209 302.353 209 277.5C209 252.647 188.853 232.5 164 232.5C139.147 232.5 119 252.647 119 277.5C119 302.353 139.147 322.5 164 322.5ZM164.495 306.676C180.335 306.676 193.176 293.835 193.176 277.995C193.176 262.154 180.335 249.313 164.495 249.313C148.654 249.313 135.813 262.154 135.813 277.995C135.813 293.835 148.654 306.676 164.495 306.676Z"
+                  fill="#282A31"
+                ></path>
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M112.937 293.547C102.368 311.19 83.0631 323 61 323C27.5868 323 0.5 295.913 0.5 262.5C0.5 229.087 27.5868 202 61 202C82.4649 202 101.319 213.178 112.058 230.031L97.5798 240.028C90.0735 228.002 76.7212 220 61.5 220C38.0279 220 19 239.028 19 262.5C19 285.972 38.0279 305 61.5 305C76.8398 305 90.2814 296.873 97.7542 284.69L112.937 293.547Z"
+                  fill="#282A31"
+                ></path>
+              </svg>
+            </div>
+          </a>
+
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              gap: 2rem;
+              margin: 2rem auto;
+              padding: 0 20px;
+            "
+          >
+            <div
+              style="
+                flex: 1;
+                min-width: 280px;
+                font-size: 16px;
+                line-height: 1.6;
+                color: #333;
+              "
+            >
+              <h4>Intelligent Learning Platform</h4>
+              An intelligent learning platform that leverages AI to transform
+              educational content into interactive experiences. Built with
+              React, AWS serverless architecture, and OpenAI, it features
+              real-time content analysis, personalized learning paths, and
+              adaptive assessments for enhanced learning outcomes.
+            </div>
+            <div>
+              <h4>Tech Stack:</h4>
+              <ul style="list-style: none; padding: 0; margin: 0">
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  React, Tailwind CSS, AWS Amplify
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  Node.js, DynamoDB, S3, CloudFront
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  OpenAI API, Pinecone Vector DB
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  AWS Cognito, API Gateway, Lambda
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 0.5rem;
+              justify-content: center;
+              margin-top: 1.5rem;
+            "
+          >
+            <a
+              href="https://cogniboom.com"
+              class="icon-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Visit Cogniboom"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                style="height: 1.5rem"
+              >
+                <path
+                  fill="currentColor"
+                  d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stellar Page Section -->
+      <section class="section" id="stellarpage">
+        <div class="section-content">
+          <a
+            href="https://github.com/CarsonJoe/StellarPage"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="text-decoration: none; display: block"
+          >
+            <div style="max-width: 30%; margin: 0 auto; min-width: 200px">
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background circle representing the night sky -->
+                <!-- <circle
+                  cx="50"
+                  cy="50"
+                  r="48"
+                  fill="none"
+                  stroke="#4C566A"
+                  stroke-width="2"
+                /> -->
+
+                <!-- Constellation line - made thicker -->
+                <line
+                  x1="30"
+                  y1="40"
+                  x2="45"
+                  y2="25"
+                  stroke="#4C566A"
+                  stroke-width="2"
+                />
+                <line
+                  x1="45"
+                  y1="25"
+                  x2="58"
+                  y2="37"
+                  stroke="#4C566A"
+                  stroke-width="2"
+                />
+                <line
+                  x1="58"
+                  y1="37"
+                  x2="70"
+                  y2="55"
+                  stroke="#4C566A"
+                  stroke-width="2"
+                />
+
+                <!-- Stars of various sizes - made larger -->
+                <!-- Bright stars -->
+                <circle cx="30" cy="40" r="7" fill="#E5E9F0" />
+                <circle cx="70" cy="55" r="6" fill="#EBCB8B" />
+                <circle cx="45" cy="25" r="5" fill="#88C0D0" />
+
+                <!-- Medium stars -->
+                <circle cx="35" cy="65" r="4.5" fill="#D8DEE9" />
+                <circle cx="75" cy="30" r="4" fill="#8FBCBB" />
+                <circle cx="60" cy="70" r="4.5" fill="#EBCB8B" />
+
+                <!-- Small stars - now medium sized -->
+                <circle cx="25" cy="75" r="3" fill="#E5E9F0" />
+                <circle cx="50" cy="50" r="4" fill="#88C0D0" />
+                <circle cx="58" cy="37" r="3" fill="#D8DEE9" />
+                <circle cx="85" cy="65" r="3" fill="#E5E9F0" />
+                <circle cx="15" cy="35" r="3" fill="#EBCB8B" />
+
+                <!-- Planet - made larger -->
+                <circle cx="65" cy="42" r="5.5" fill="#BF616A" />
+
+                <!-- Cardinal direction markers -->
+                <text
+                  x="50"
+                  y="12"
+                  fill="#88C0D0"
+                  font-family="monospace"
+                  font-size="10"
+                  text-anchor="middle"
+                  font-weight="bold"
+                >
+                  N
+                </text>
+                <text
+                  x="88"
+                  y="50"
+                  fill="#88C0D0"
+                  font-family="monospace"
+                  font-size="10"
+                  text-anchor="middle"
+                  font-weight="bold"
+                >
+                  E
+                </text>
+                <text
+                  x="50"
+                  y="92"
+                  fill="#88C0D0"
+                  font-family="monospace"
+                  font-size="10"
+                  text-anchor="middle"
+                  font-weight="bold"
+                >
+                  S
+                </text>
+                <text
+                  x="12"
+                  y="50"
+                  fill="#88C0D0"
+                  font-family="monospace"
+                  font-size="10"
+                  text-anchor="middle"
+                  font-weight="bold"
+                >
+                  W
+                </text>
+              </svg>
+            </div>
+          </a>
+
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              gap: 2rem;
+              margin: 2rem auto;
+              padding: 0 20px;
+            "
+          >
+            <div
+              style="
+                flex: 1;
+                min-width: 280px;
+                font-size: 16px;
+                line-height: 1.6;
+                color: #333;
+              "
+            >
+              <h4>StellarPage: Browser Extension Star Map</h4>
+              A minimalist browser extension that transforms the new tab page
+              into an interactive star map displaying real-time positions of
+              celestial bodies.
+            </div>
+            <div>
+              <h4>Tech Stack:</h4>
+              <ul style="list-style: none; padding: 0; margin: 0">
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  Vanilla JavaScript (ES Modules), Vite
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  HTML5 Canvas 2D Rendering
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  Astronomy Engine (Astronomical Calculations)
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  Browser Extension API (Chrome & Firefox)
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 0.5rem;
+              justify-content: center;
+              margin-top: 1.5rem;
+            "
+          >
+            <a
+              href="https://chromewebstore.google.com/detail/stellarpage/donkjkgghghchhbppbmlbeigobgmliab"
+              class="icon-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Chrome Web Store"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                style="height: 1.5rem"
+              >
+                <path
+                  fill="currentColor"
+                  d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://addons.mozilla.org/en-CA/firefox/addon/stellar-homepage/"
+              class="icon-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Firefox Add-ons"
+            >
+              <svg
+                fill="currentColor"
+                viewBox="0 0 32 32"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M11.807 9.776c0.011 0 0.005 0 0 0zM8.109 7.927c0.011 0 0.005 0 0 0zM30.229 10.781c-0.667-1.604-2.021-3.333-3.079-3.885 0.865 1.692 1.365 3.396 1.552 4.661l0.005 0.027c-1.739-4.329-4.681-6.073-7.088-9.871-0.12-0.192-0.24-0.385-0.36-0.588-0.063-0.104-0.115-0.208-0.172-0.319-0.099-0.192-0.171-0.395-0.224-0.609 0-0.020-0.015-0.036-0.036-0.041-0.011 0-0.021 0-0.031 0l-0.005 0.005c-0.005 0-0.011 0.005-0.011 0.005s0-0.005 0.005-0.011c-3.417 2-4.828 5.505-5.193 7.729-1.057 0.063-2.088 0.328-3.041 0.776-0.183 0.093-0.265 0.303-0.197 0.489 0.077 0.213 0.317 0.319 0.525 0.224 0.833-0.391 1.729-0.625 2.651-0.687l0.089-0.011c0.125-0.005 0.255-0.011 0.38-0.011 0.745-0.005 1.489 0.099 2.203 0.307l0.125 0.037c0.12 0.036 0.235 0.077 0.355 0.12 0.083 0.031 0.172 0.063 0.255 0.099 0.068 0.025 0.136 0.057 0.203 0.083 0.105 0.048 0.209 0.1 0.313 0.152l0.14 0.067c0.104 0.053 0.204 0.109 0.303 0.167 0.063 0.037 0.125 0.073 0.187 0.115 1.111 0.688 2.037 1.641 2.683 2.776-0.817-0.572-2.287-1.145-3.697-0.895 5.52 2.76 4.036 12.265-3.615 11.905-0.683-0.025-1.355-0.156-1.995-0.385-0.156-0.057-0.308-0.12-0.453-0.183-0.088-0.041-0.177-0.083-0.26-0.124-1.876-0.969-3.423-2.803-3.615-5.027 0 0 0.708-2.64 5.072-2.64 0.475 0 1.824-1.319 1.849-1.699-0.011-0.125-2.683-1.187-3.724-2.213-0.557-0.547-0.817-0.812-1.052-1.011-0.125-0.109-0.26-0.208-0.401-0.301-0.348-1.224-0.364-2.521-0.041-3.751-1.579 0.719-2.803 1.855-3.693 2.855h-0.009c-0.609-0.771-0.563-3.313-0.532-3.844-0.005-0.036-0.453 0.229-0.511 0.271-0.536 0.385-1.041 0.813-1.5 1.287-0.525 0.531-1.004 1.104-1.437 1.719-0.984 1.396-1.687 2.979-2.057 4.645-0.005 0.021-0.145 0.647-0.249 1.417-0.021 0.12-0.037 0.24-0.052 0.359-0.043 0.292-0.073 0.589-0.089 0.881l-0.005 0.047c-0.009 0.172-0.020 0.339-0.031 0.511v0.077c0 8.48 6.875 15.355 15.355 15.355 7.593 0 13.9-5.516 15.135-12.756 0.027-0.197 0.047-0.395 0.068-0.593 0.307-2.631-0.031-5.401-0.995-7.713z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://github.com/CarsonJoe/StellarPage"
+              class="icon-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="View on GitHub"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- PhotoShare Section -->
+      <section class="section" id="photoshare">
+        <div class="section-content">
+          <h2
+            class="modal-title"
+            style="margin-bottom: 2rem; text-align: center"
+          >
+            PhotoShare
+          </h2>
+
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              gap: 2rem;
+              margin: 0 auto;
+              padding: 0 20px;
+            "
+          >
+            <div
+              style="
+                flex: 1;
+                min-width: 280px;
+                font-size: 16px;
+                line-height: 1.6;
+                color: #333;
+              "
+            >
+              <h4>Frictionless Photo Hosting & Sharing</h4>
+              <p style="margin-bottom: 1rem">
+                Sharing photos with friends, family and socials is not easy,
+                especially when transferring between different ecosystems like
+                Windows and ios. Previously, whenever i wanted to share a photo
+                from my dslr, I would upload the photo to my laptop, edit with
+                photoshop, upload to google drive, download to my phone, and
+                finally share the photos.
+              </p>
+
+              <p style="margin-bottom: 1rem">
+                So I built a direct publishing pipeline taking advantage of
+                GitHub's cloud storage and static hosting. I made a custom photo
+                editor which processes source media and publishes directly to
+                GitHub Pages. Zero-cost, full-quality distribution with global
+                CDN delivery, universal device access and indefinite storage
+                backup.
+              </p>
+            </div>
+            <div>
+              <h4>Tech Stack:</h4>
+              <ul style="list-style: none; padding: 0; margin: 0">
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  HTML5, CSS3, JavaScript
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  GitHub Pages, Static Hosting
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  Custom Photo Editor Integration
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              gap: 0.5rem;
+              margin-top: 1.5rem;
+            "
+          >
+            <a
+              href="https://carsonjoe.github.io/PhotoShare/"
+              class="icon-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Live Site"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                style="height: 1.5rem"
+              >
+                <path
+                  fill="currentColor"
+                  d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://github.com/CarsonJoe/PhotoShare"
+              class="icon-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="GitHub Repository"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Somna Studio Section -->
+      <section class="section" id="somna">
+        <div class="section-content">
+          <a
+            href="https://somna.cogniboom.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="text-decoration: none; display: block"
+          >
+            <h2
+              class="modal-title"
+              style="margin-bottom: 2rem; text-align: center"
+            >
+              Somna Studio
+            </h2>
+          </a>
+
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              gap: 2rem;
+              margin: 2rem auto;
+              padding: 0 20px;
+            "
+          >
+            <div
+              style="
+                flex: 1;
+                min-width: 280px;
+                font-size: 16px;
+                line-height: 1.6;
+                color: #333;
+              "
+            >
+              <h4>AI-Powered Animation Studio</h4>
+
+              <p style="margin-bottom: 1rem">
+                Somna Studio transforms natural language descriptions into
+                real-time JavaScript canvas animations. Users describe what they
+                want to see, and the AI generates high-performance 60fps
+                animations that can be refined through iterative prompts. The
+                platform features cloud storage for saving animations, user
+                authentication.
+              </p>
+
+              <p style="margin-bottom: 1rem">
+                Built with React and Next.js on the frontend, leveraging Vercel
+                serverless functions and the Vercel AI SDK for multi-provider
+                LLM support (OpenAI, Anthropic, Google, xAI, OpenRouter). User
+                data and animations are securely stored in Supabase, with Stripe
+                integration for payment processing.
+              </p>
+            </div>
+            <div>
+              <h4>Tech Stack:</h4>
+              <ul style="list-style: none; padding: 0; margin: 0">
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  React, Next.js, Tailwind CSS
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  Vercel Serverless API, Vercel AI SDK
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  Supabase (Auth & Database), Stripe
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  Multi-LLM Support, Canvas API
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 0.5rem;
+              justify-content: center;
+              margin-top: 1.5rem;
+            "
+          >
+            <a
+              href="https://somna.cogniboom.com/"
+              class="icon-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Visit Somna Studio"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                style="height: 1.5rem"
+              >
+                <path
+                  fill="currentColor"
+                  d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Construction DB Section -->
+      <section class="section" id="construction">
+        <div class="section-content">
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              gap: 2rem;
+              margin: 5rem auto;
+              padding: 0 20px;
+            "
+          >
+            <div
+              style="
+                flex: 1;
+                min-width: 280px;
+                font-size: 16px;
+                line-height: 1.6;
+                color: #333;
+              "
+            >
+              <h4>Construction Document Intelligence Platform</h4>
+              An experimental internal platform developed for a leading
+              construction company (ENR Top 400 Contractor) to explore
+              innovative document management and knowledge retrieval. The system
+              enables teams to create collaborative spaces for related documents
+              (specifications, drawings, submittals, etc.) and perform advanced
+              semantic searches using RAG techniques. Built with modern AI
+              technology, it transformed how construction teams could access and
+              utilize their document repositories, making relevant information
+              more easily accessable.
+            </div>
+            <div>
+              <h4>Tech Stack:</h4>
+              <ul style="list-style: none; padding: 0; margin: 0">
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  React, shadcn/ui, Tailwind CSS
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  Express.js, Python, AWS (S3, DynamoDB)
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  Anthropic Claude API, Voyage AI, Pinecone
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  PDF Processing, Vector Search, RAG
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Four Friends Mahjong Section -->
+      <section class="section" id="mahjong">
+        <div class="section-content">
+          <div style="text-align: center; margin-bottom: 2rem">
+            <img
+              src="./assets/ffm_logo.png"
+              alt="Four Friends Mahjong"
+              style="max-width: 300px; width: 100%; height: auto"
+            />
+          </div>
+
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              gap: 2rem;
+              margin: 2rem auto;
+              padding: 0 20px;
+            "
+          >
+            <div
+              style="
+                flex: 1;
+                min-width: 280px;
+                font-size: 16px;
+                line-height: 1.6;
+                color: #333;
+              "
+            >
+              <h4>Shopify E-Commerce Platform</h4>
+              A custom Shopify-based e-commerce platform built with Liquid.js to
+              emphasize the product and convert with great UI/UX and
+              responsiveness. Features a simple mahjong teacher chatbot
+              interface using Google Generative AI API and Google Maps API
+              integration.
+            </div>
+            <div>
+              <h4>Tech Stack:</h4>
+              <ul style="list-style: none; padding: 0; margin: 0">
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  Shopify, Custom Liquid.js Sections
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  Google Generative AI API, Google Maps API
+                </li>
+                <li
+                  style="display: flex; align-items: center; margin-bottom: 8px"
+                >
+                  <span class="circle"></span>
+                  JavaScript, HTML5, CSS3
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 0.5rem;
+              justify-content: center;
+              margin-top: 1.5rem;
+            "
+          >
+            <a
+              href="https://www.fourfriendsmahjong.com/"
+              class="icon-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Visit Site"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                style="height: 1.5rem"
+              >
+                <path
+                  fill="currentColor"
+                  d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section class="section" id="contact">
+        <div class="section-content">
+          <h2 class="modal-title" style="margin-bottom: 2rem">Contact</h2>
+          <div style="display: flex; flex-direction: column; gap: 1.5rem">
+            <div>
+              <h4>Email</h4>
+              <p style="color: #666">CarsonGragg@gmail.com</p>
+            </div>
+            <div>
+              <h4>Phone</h4>
+              <p style="color: #666">925 818 6745</p>
+            </div>
+            <div>
+              <h4>Social</h4>
+              <div style="display: flex; gap: 1rem; margin-top: 0.5rem">
+                <a
+                  href="https://github.com/carsonjoe"
+                  class="icon-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      fill="currentColor"
+                      d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="https://www.youtube.com/@graggie325"
+                  class="icon-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      fill="currentColor"
+                      d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/carson-gragg"
+                  class="icon-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                      fill="currentColor"
+                      d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <script>
-        // Project data
-        const projectData = {
-            cogniboom: {
-                title: 'Cogniboom',
-                content: `
-                    <a href="https://cogniboom.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: block;">
-                        <div style="max-width: 50%; margin: 0 auto; min-width: 200px">
-                            <svg viewBox="0 0 903 550" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="658" cy="29" r="29" fill="#797EB5"></circle><path d="M297.5 116C285.5 116 275.846 120 266.5 133.5C255.423 149.5 255.1 161.3 259.5 172.5C265 186.5 285 197 309.5 202C326.135 205.395 360 214.5 370.5 197C380.996 179.505 357 148.953 338.5 134.5C322 121.61 313 116 297.5 116Z" fill="#EC7579"></path><path d="M369.5 49.5C359.5 49.5 352 52 340.5 63C328.5 74.4782 323.086 81.9311 326 99C329.5 119.5 359.5 143 369.5 150C379.5 157 396 161 404.5 156C413 151 416 136.5 417 123C418 109.5 414 88.0001 404.5 72.0001C395 56.0001 379.5 49.5 369.5 49.5Z" fill="#F7C848"></path><path d="M520.5 57.5001C533.5 49.5003 548.5 50.5001 564 66.0003C578 78.0005 578 86.2001 578 95.0001C578 106 574.489 117.489 563.5 128C552 139 531 158.525 514.5 161C498 163.475 483.5 159 484.5 126C485.5 93.0003 506.986 65.8161 520.5 57.5001Z" fill="#797DB5"></path><path d="M646.877 165.394C647.352 155.405 645.665 148.317 634.771 135.785C623.876 123.253 611.688 122.9 594.5 125C573.857 127.521 549.468 151.344 542 161C534.533 170.656 524.251 185.5 531.5 199.284C536.09 208.013 557 209.346 571.201 209.346C584.738 209.346 605.551 206.415 622.738 199.284C641.5 191.5 646.401 175.382 646.877 165.394Z" fill="#269DCF"></path><path d="M609.5 432.5C619 427.5 626.806 422.697 633.5 407.5C638.566 396 637.5 383.861 628.938 370.259C617.859 352.659 585.914 340.748 573.996 338.108C562.079 335.468 546.5 334.5 538 342C528.5 350.382 533.948 376.153 540 389C548.5 407.042 560.312 423.572 574 432.5C585.5 440 600.651 437.158 609.5 432.5Z" fill="#787CB6"></path><path d="M493.079 478.402C503.507 480.951 512.537 482.526 527.619 475.579C539.033 470.322 544.432 462.777 547.5 447C551 429 541 407.5 531 391C524.673 380.561 510.825 363.258 499.489 363.244C486.82 363.228 473.825 386.139 469.846 399.772C464.258 418.917 462.152 439.124 466.49 454.88C470.134 468.117 483.365 476.027 493.079 478.402Z" fill="#787CB6"></path><path d="M382.5 478.5C392.5 482.663 401.808 486.432 417.5 481C430.5 476.5 438.538 469.616 444 454.5C450.232 437.255 443.156 414.656 435.818 396.812C431.175 385.523 421 366.5 408.5 365.5C392.5 364.22 380.532 383.956 374.5 396.812C366.029 414.868 358.642 435.263 360.5 451.5C362.061 465.14 373.268 474.657 382.5 478.5Z" fill="#F6C747"></path><path d="M271.5 409.5C275 421 285.5 432.944 296 438C308.5 444.019 318.825 445.946 332.5 437.5C349.5 427 361.132 407.332 368.5 389.5C373.162 378.219 378 358 370.742 347.202C361.789 333.88 335.5 339 313 350.001C313 350.001 305.558 363.82 298 370.001C290.019 376.527 274 381.001 274 381.001C269 389.5 268.588 399.933 271.5 409.5Z" fill="#F7AC55"></path><path d="M750 320V234H764.5V245C765 246.5 766.5 245.5 767.5 244.5C768.291 243.709 772.5 240.5 776 238.5C779.5 236.5 785 234 794.5 234C823.7 234 833 257.333 834 269V320H819V272C818 264.5 811.4 249.5 793 249.5C774.6 249.5 766.667 264.5 765 272V320H750Z" fill="#282A31"></path><path d="M819 320V261.5C819.791 260.709 828.5 248.5 837.5 242C846.5 235.5 854 234 863.5 234C892.7 234 902 257.333 903 269V320H888V272C887 264.5 880.4 249.5 862 249.5C843.6 249.5 835.667 264.5 834 272V320H819Z" fill="#282A31"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M691 322.5C715.853 322.5 736 302.353 736 277.5C736 252.647 715.853 232.5 691 232.5C666.147 232.5 646 252.647 646 277.5C646 302.353 666.147 322.5 691 322.5ZM691.495 306.676C707.335 306.676 720.176 293.835 720.176 277.995C720.176 262.154 707.335 249.313 691.495 249.313C675.654 249.313 662.813 262.154 662.813 277.995C662.813 293.835 675.654 306.676 691.495 306.676Z" fill="#282A31"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M593 322.5C617.853 322.5 638 302.353 638 277.5C638 252.647 617.853 232.5 593 232.5C568.147 232.5 548 252.647 548 277.5C548 302.353 568.147 322.5 593 322.5ZM593.495 306.676C609.335 306.676 622.176 293.835 622.176 277.995C622.176 262.154 609.335 249.313 593.495 249.313C577.654 249.313 564.813 262.154 564.813 277.995C564.813 293.835 577.654 306.676 593.495 306.676Z" fill="#282A31"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M495 322.5C519.853 322.5 540 302.353 540 277.5C540 252.647 519.853 232.5 495 232.5C470.147 232.5 450 252.647 450 277.5C450 302.353 470.147 322.5 495 322.5ZM495.495 306.676C511.335 306.676 524.176 293.835 524.176 277.995C524.176 262.154 511.335 249.313 495.495 249.313C479.654 249.313 466.813 262.154 466.813 277.995C466.813 293.835 479.654 306.676 495.495 306.676Z" fill="#282A31"></path><path d="M450 209.5V277L468 250V198.5L450 209.5Z" fill="#282A31"></path><path d="M418 242V320H435.5V234L418 242Z" fill="#282A31"></path><circle cx="427" cy="211" r="12" fill="#282A31"></circle><path d="M317 320V234H331.5V245C332 246.5 333.5 245.5 334.5 244.5C335.291 243.709 339.5 240.5 343 238.5C346.5 236.5 352 234 361.5 234C390.7 234 400 257.333 401 269V320H386V272C385 264.5 378.4 249.5 360 249.5C341.6 249.5 333.667 264.5 332 272V320H317Z" fill="#282A31"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M260.5 318.5C283.972 318.5 303 299.472 303 276C303 252.528 283.972 233.5 260.5 233.5C237.028 233.5 218 252.528 218 276C218 299.472 237.028 318.5 260.5 318.5ZM261 302C275.359 302 287 290.359 287 276C287 261.641 275.359 250 261 250C246.641 250 235 261.641 235 276C235 290.359 246.641 302 261 302Z" fill="#282A31"></path><path d="M284 325C282 320.2 276.5 317 274 316L287.5 307.5C289.667 309 294.3 312.4 295.5 314C297 316 302 318.5 302 333C302 347.5 292 358 288 361C284 364 274.5 369 262 369C249.5 369 240.5 364 235.5 360C230.5 356 224 349 224 339C224 329 225 326 227 324.5C229 323 229.5 322.5 234.5 322.5C238.5 322.5 241.833 324.5 243 325.5C243.833 325.833 245 327.1 243 329.5C241 331.9 239.833 336.167 239.5 338C239.5 348.8 253.833 351.833 261 352C264.667 352.5 273.4 352.1 279 346.5C286 339.5 286.5 331 284 325Z" fill="#282A31"></path><path d="M290 240.5C287.757 241.141 288.167 243.833 289 245C283.333 241.833 272.6 235.7 275 236.5C278 237.5 279.5 235.5 280.5 233C281.5 230.5 283 226 285 223C287 220 291.5 216.5 296.5 216.5C301.5 216.5 304.5 220.5 304.5 224C304.5 227.5 302.5 231.5 299.5 235C296.5 238.5 293.5 239.5 290 240.5Z" fill="#282A31"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M164 322.5C188.853 322.5 209 302.353 209 277.5C209 252.647 188.853 232.5 164 232.5C139.147 232.5 119 252.647 119 277.5C119 302.353 139.147 322.5 164 322.5ZM164.495 306.676C180.335 306.676 193.176 293.835 193.176 277.995C193.176 262.154 180.335 249.313 164.495 249.313C148.654 249.313 135.813 262.154 135.813 277.995C135.813 293.835 148.654 306.676 164.495 306.676Z" fill="#282A31"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M112.937 293.547C102.368 311.19 83.0631 323 61 323C27.5868 323 0.5 295.913 0.5 262.5C0.5 229.087 27.5868 202 61 202C82.4649 202 101.319 213.178 112.058 230.031L97.5798 240.028C90.0735 228.002 76.7212 220 61.5 220C38.0279 220 19 239.028 19 262.5C19 285.972 38.0279 305 61.5 305C76.8398 305 90.2814 296.873 97.7542 284.69L112.937 293.547Z" fill="#282A31"></path></svg>
-                        </div>
-                    </a>
+      // Navigation and scroll handling
+      const scrollContainer = document.getElementById("scrollContainer");
+      const navDots = document.querySelectorAll(".nav-dot");
+      const sections = document.querySelectorAll(".section");
 
-                    <div style="display: flex; flex-wrap: wrap; gap: 2rem; margin: 2rem auto; padding: 0 20px;">
-                        <!-- Description Column -->
-                        <div style="flex: 1; min-width: 280px; font-size: 16px; line-height: 1.6; color: #333;">
-                            <h4>Intelligent Learning Platform</h4>
-                            An intelligent learning platform that leverages AI to transform educational content into interactive experiences. Built with React, AWS serverless architecture, and OpenAI, it features real-time content analysis, personalized learning paths, and adaptive assessments for enhanced learning outcomes.
-                        </div>
+      // Track current section
+      let currentSection = 0;
 
-                        <!-- Tech Stack Column -->
-                        <div>
-                            <h4>Tech Stack:</h4>
-                            <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="display: flex; align-items: center; margin-bottom: 8px;">
-                                <span class="circle"></span>
-                                React, Tailwind CSS, AWS Amplify
-                            </li>
-                            <li style="display: flex; align-items: center; margin-bottom: 8px;">
-                                <span class="circle"></span>
-                                Node.js, DynamoDB, S3, CloudFront
-                            </li>
-                            <li style="display: flex; align-items: center; margin-bottom: 8px;">
-                                <span class="circle"></span>
-                                OpenAI API, Pinecone Vector DB
-                            </li>
-                            <li style="display: flex; align-items: center; margin-bottom: 8px;">
-                                <span class="circle"></span>
-                                AWS Cognito, API Gateway, Lambda
-                            </li>
-                            </ul>
-                        </div>
-                    </div>
-                    `
-            },
-            fragment: {
-                title: 'Fragment Memory',
-                content: `
-                    <a href="https://github.com/CarsonJoe/FragmentMemory?tab=readme-ov-file#readme" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: block;">
-                        <div style="max-width: 40%; margin: 0 auto; min-width: 200px">
-                            <!-- Abstract tree-like SVG logo representing hierarchical knowledge structure -->
-                            <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Central node -->
-                                <circle cx="200" cy="150" r="30" fill="#797EB5"/>
-                                
-                                <!-- Branch 1 -->
-                                <path d="M200 120 L150 70" stroke="#EC7579" stroke-width="3"/>
-                                <circle cx="150" cy="70" r="20" fill="#EC7579"/>
-                                <path d="M150 70 L100 40" stroke="#EC7579" stroke-width="2"/>
-                                <circle cx="100" cy="40" r="15" fill="#EC7579"/>
-                                <path d="M150 70 L120 100" stroke="#EC7579" stroke-width="2"/>
-                                <circle cx="120" cy="100" r="15" fill="#EC7579"/>
-                                
-                                <!-- Branch 2 -->
-                                <path d="M200 120 L250 70" stroke="#F7C848" stroke-width="3"/>
-                                <circle cx="250" cy="70" r="20" fill="#F7C848"/>
-                                <path d="M250 70 L300 40" stroke="#F7C848" stroke-width="2"/>
-                                <circle cx="300" cy="40" r="15" fill="#F7C848"/>
-                                <path d="M250 70 L280 100" stroke="#F7C848" stroke-width="2"/>
-                                <circle cx="280" cy="100" r="15" fill="#F7C848"/>
-                                
-                                <!-- Branch 3 -->
-                                <path d="M200 180 L150 230" stroke="#269DCF" stroke-width="3"/>
-                                <circle cx="150" cy="230" r="20" fill="#269DCF"/>
-                                <path d="M150 230 L100 260" stroke="#269DCF" stroke-width="2"/>
-                                <circle cx="100" cy="260" r="15" fill="#269DCF"/>
-                                <path d="M150 230 L120 200" stroke="#269DCF" stroke-width="2"/>
-                                <circle cx="120" cy="200" r="15" fill="#269DCF"/>
-                                
-                                <!-- Branch 4 -->
-                                <path d="M200 180 L250 230" stroke="#797DB5" stroke-width="3"/>
-                                <circle cx="250" cy="230" r="20" fill="#797DB5"/>
-                                <path d="M250 230 L300 260" stroke="#797DB5" stroke-width="2"/>
-                                <circle cx="300" cy="260" r="15" fill="#797DB5"/>
-                                <path d="M250 230 L280 200" stroke="#797DB5" stroke-width="2"/>
-                                <circle cx="280" cy="200" r="15" fill="#797DB5"/>
-                            </svg>
-                        </div>
-                    </a>
+      // Update active nav dot
+      function updateNavDots() {
+        navDots.forEach((dot, index) => {
+          dot.classList.toggle("active", index === currentSection);
+        });
 
-                    <div style="display: flex; flex-wrap: wrap; gap: 2rem; margin: 2rem auto; padding: 0 20px;">
-                        <!-- Description Column -->
-                        <div style="flex: 1; min-width: 280px; font-size: 16px; line-height: 1.6; color: #333;">
-                            <h4>Persistent Knowledge System</h4>
-                            A sophisticated knowledge management system that enhances LLM capabilities through hierarchical information storage. Built with Next.js and modern cloud technologies, it implements a tree-structured architecture of "knowledge fragments" enabling efficient autonomous storage and retrieval of information. The system features dynamic knowledge organization, contextual querying, and adaptive information retrieval for improved AI interactions.
-                        </div>
+        // Update body class for landing section
+        document.body.classList.toggle("on-landing", currentSection === 0);
+      }
 
-                        <!-- Tech Stack Column -->
-                        <div>
-                            <h4>Tech Stack:</h4>
-                            <ul style="list-style: none; padding: 0; margin: 0;">
-                                <li style="display: flex; align-items: center; margin-bottom: 8px;">
-                                    <span class="circle"></span>
-                                    Next.js 13+, TypeScript, Tailwind CSS
-                                </li>
-                                <li style="display: flex; align-items: center; margin-bottom: 8px;">
-                                    <span class="circle"></span>
-                                    Vector Database, PostgreSQL, Prisma
-                                </li>
-                                <li style="display: flex; align-items: center; margin-bottom: 8px;">
-                                    <span class="circle"></span>
-                                    LangChain, OpenAI API Integration
-                                </li>
-                                <li style="display: flex; align-items: center; margin-bottom: 8px;">
-                                    <span class="circle"></span>
-                                    Vercel Edge Functions, Server Components
-                                </li>
-                            </ul>
-                        </div>
-                    </div>                
-                `
-            },
-            chromatography: {
-                title: 'Chromatography',
-                content: `
-                    <h3>Scientific Visualization Tool</h3>
-                    <p>A web-based tool for visualizing and analyzing chromatography data...</p>
-                    <img src="/api/placeholder/600/400" alt="Chromatography Screenshot" />
-                `
-            },
-            energy: {
-                title: 'Sustainable Energy Model',
-                content: `
-                    <h3>Energy Management System</h3>
-                    <p>A comprehensive system for modeling and optimizing sustainable energy usage...</p>
-                    <img src="/api/placeholder/600/400" alt="Energy Model Screenshot" />
-                `
-            },
-            construction: {
-                title: 'Construction Search DB',
-                content: `
-                
-
-                    <div style="display: flex; flex-wrap: wrap; gap: 2rem; margin: 5rem auto; padding: 0 20px;">
-                        <!-- Description Column -->
-                        <div style="flex: 1; min-width: 280px; font-size: 16px; line-height: 1.6; color: #333;">
-                            <h4>Construction Document Intelligence Platform</h4>
-                            An experimental internal platform developed for a leading construction company (ENR Top 400 Contractor) to explore innovative document management and knowledge retrieval. The system enables teams to create collaborative spaces for related documents (specifications, drawings, submittals, etc.) and perform advanced semantic searches using RAG techniques. Built with modern AI technology, it transformed how construction teams could access and utilize their document repositories, making relevant information more easily accessable.
-                        </div>
-
-                        <!-- Tech Stack Column -->
-                        <div>
-                            <h4>Tech Stack:</h4>
-                            <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li style="display: flex; align-items: center; margin-bottom: 8px;">
-                                <span class="circle"></span>
-                                React, shadcn/ui, Tailwind CSS
-                            </li>
-                            <li style="display: flex; align-items: center; margin-bottom: 8px;">
-                                <span class="circle"></span>
-                                Express.js, Python, AWS (S3, DynamoDB)
-                            </li>
-                            <li style="display: flex; align-items: center; margin-bottom: 8px;">
-                                <span class="circle"></span>
-                                Anthropic Claude API, Voyage AI, Pinecone
-                            </li>
-                            <li style="display: flex; align-items: center; margin-bottom: 8px;">
-                                <span class="circle"></span>
-                                PDF Processing, Vector Search, RAG
-                            </li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            }
-        };
-
-        // Get DOM elements
-        const container = document.querySelector('.container');
-        const modal = document.querySelector('.modal');
-        const modalTitle = document.querySelector('.modal-title');
-        const modalBody = document.querySelector('.modal-body');
-        const closeButton = document.querySelector('.close-button');
-        const projectLinks = document.querySelectorAll('.project-link');
-
-        // Function to update URL
-        function updateURL(projectId) {
-            const url = projectId ? `${window.location.pathname}?project=${projectId}` : window.location.pathname;
-            history.pushState({ projectId }, '', url);
+      // Scroll to section
+      function scrollToSection(index) {
+        const section = sections[index];
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth" });
+          currentSection = index;
+          updateNavDots();
         }
+      }
 
-        // Function to open modal
-        function openModal(projectId, pushState = true) {
-            const project = projectData[projectId];
-            if (project) {
-                modalTitle.textContent = project.title;
-                modalBody.innerHTML = project.content;
-                modal.classList.add('open');
-                container.classList.add('modal-open');
-                document.body.style.overflow = 'hidden';
-                if (pushState) {
-                    updateURL(projectId);
-                }
+      // Handle scroll events to track current section
+      let scrollTimeout;
+      scrollContainer.addEventListener("scroll", () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+          const scrollPosition = scrollContainer.scrollTop;
+          const windowHeight = window.innerHeight;
+
+          sections.forEach((section, index) => {
+            const rect = section.getBoundingClientRect();
+            if (
+              rect.top <= windowHeight / 2 &&
+              rect.bottom >= windowHeight / 2
+            ) {
+              currentSection = index;
+              updateNavDots();
             }
+          });
+        }, 100);
+      });
+
+      // Nav dot click handlers
+      navDots.forEach((dot) => {
+        dot.addEventListener("click", () => {
+          const sectionIndex = parseInt(dot.dataset.section);
+          scrollToSection(sectionIndex);
+        });
+      });
+
+      // Handle section navigation from landing page
+      document.querySelectorAll("[data-scroll]").forEach((element) => {
+        element.addEventListener("click", () => {
+          const sectionIndex = parseInt(element.dataset.scroll);
+          scrollToSection(sectionIndex);
+        });
+      });
+
+      // ESC key to return to landing
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          scrollToSection(0);
         }
+      });
 
-        // Function to close modal
-        function closeModal(pushState = true) {
-            modal.classList.remove('open');
-            container.classList.remove('modal-open');
-            document.body.style.overflow = '';
-            if (pushState) {
-                updateURL(null);
-            }
-        }
-
-        // Handle browser navigation
-        window.addEventListener('popstate', (event) => {
-            const projectId = event.state?.projectId;
-            if (projectId) {
-                openModal(projectId, false);
-            } else {
-                closeModal(false);
-            }
-        });
-
-        // Check URL on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const projectId = urlParams.get('project');
-            if (projectId && projectData[projectId]) {
-                openModal(projectId, false);
-            }
-        });
-
-        // Add click listeners to project links
-        projectLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                const projectId = link.dataset.project;
-                openModal(projectId);
-            });
-        });
-
-        // Close modal when close button is clicked
-        closeButton.addEventListener('click', closeModal);
-
-        // Close modal when ESC key is pressed
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-        });
+      // Initialize
+      updateNavDots();
     </script>
-</body>
-
+  </body>
 </html>
