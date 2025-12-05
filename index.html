@@ -74,8 +74,8 @@
       .gradient-text {
         background: linear-gradient(
           90deg,
-          #70798e 0% 15%,
-          #a993b0 15% 48%,
+          #70798e 0% 19%,
+          #a993b0 19% 48%,
           #e39594 48% 100%
         );
         -webkit-background-clip: text;
@@ -104,10 +104,10 @@
       }
 
       .profile-image {
-        width: 48px;
-        height: 48px;
+        width: 55px;
+        height: 55px;
         border-radius: 50%;
-        background-color: #ddd;
+        object-fit: cover;
       }
 
       .profile-info h2 {
@@ -206,6 +206,7 @@
         display: flex;
         flex-direction: column;
         gap: 1rem;
+        transition: opacity 0.3s ease;
       }
 
       .nav-dot {
@@ -233,6 +234,34 @@
         pointer-events: none;
       }
 
+      /* Mobile: Move nav to top and auto-hide */
+      @media (max-width: 768px) {
+        .nav-bar {
+          left: 50%;
+          top: 1rem;
+          transform: translateX(-50%);
+          flex-direction: row;
+          gap: 0.75rem;
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .nav-bar.show {
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        body.on-landing .nav-bar.show {
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .nav-dot {
+          width: 10px;
+          height: 10px;
+        }
+      }
+
       @media (max-width: 768px) {
         .about span {
           height: 50px;
@@ -254,10 +283,6 @@
 
         .title {
           font-size: 3rem;
-        }
-
-        .nav-bar {
-          left: 1rem;
         }
 
         .section {
@@ -303,13 +328,17 @@
           <header class="header">
             <span class="title">
               Carson Gragg<br />
-              F<span class="gradient-text">ullStack Software</span><br />
+              <span class="gradient-text">FullStack Software</span><br />
             </span>
             <div class="about">
               <span class="title"> Dev. </span>
 
               <div class="profile">
-                <div class="profile-image"></div>
+                <img
+                  src="./assets/Headshot.png"
+                  alt="Carson Gragg"
+                  class="profile-image"
+                />
                 <div class="profile-info">
                   <p>Location:</p>
                   <h2>Bay Area</h2>
@@ -327,9 +356,9 @@
             <div class="nav-item">
               <h3>Skills</h3>
               <div class="content-section">
-                <p>Frontend Development</p>
-                <p>UI/UX Design</p>
-                <p>React / Next.js</p>
+                <p>React, Next.js, Node, ts, py</p>
+                <p>AI/LLM, Cloud (AWS/Vercel)</p>
+                <p>Product, UI/UX, Design</p>
               </div>
             </div>
             <div class="nav-item">
@@ -339,7 +368,7 @@
                   Cogniboom
                 </p> -->
                 <p class="project-link" style="cursor: pointer" data-scroll="2">
-                  Stellar Page
+                  StellarPage
                 </p>
                 <p class="project-link" style="cursor: pointer" data-scroll="3">
                   PhotoShare
@@ -622,16 +651,6 @@
           >
             <div style="max-width: 30%; margin: 0 auto; min-width: 200px">
               <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <!-- Background circle representing the night sky -->
-                <!-- <circle
-                  cx="50"
-                  cy="50"
-                  r="48"
-                  fill="none"
-                  stroke="#4C566A"
-                  stroke-width="2"
-                /> -->
-
                 <!-- Constellation line - made thicker -->
                 <line
                   x1="30"
@@ -789,6 +808,24 @@
               margin-top: 1.5rem;
             "
           >
+            <a
+              href="https://carsonjoe.github.io/StellarPage/"
+              class="icon-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Live Site"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                style="height: 1.5rem"
+              >
+                <path
+                  fill="currentColor"
+                  d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z"
+                />
+              </svg>
+            </a>
             <a
               href="https://chromewebstore.google.com/detail/stellarpage/donkjkgghghchhbppbmlbeigobgmliab"
               class="icon-link"
@@ -1294,9 +1331,25 @@
       const scrollContainer = document.getElementById("scrollContainer");
       const navDots = document.querySelectorAll(".nav-dot");
       const sections = document.querySelectorAll(".section");
+      const navBar = document.querySelector(".nav-bar");
 
       // Track current section
       let currentSection = 0;
+
+      // Mobile detection
+      const isMobile = () => window.innerWidth <= 768;
+
+      // Auto-hide functionality for mobile
+      let hideTimeout;
+      function showNavBar() {
+        if (isMobile() && currentSection !== 0) {
+          navBar.classList.add("show");
+          clearTimeout(hideTimeout);
+          hideTimeout = setTimeout(() => {
+            navBar.classList.remove("show");
+          }, 500);
+        }
+      }
 
       // Update active nav dot
       function updateNavDots() {
@@ -1306,6 +1359,11 @@
 
         // Update body class for landing section
         document.body.classList.toggle("on-landing", currentSection === 0);
+
+        // Hide nav on mobile when returning to landing
+        if (isMobile() && currentSection === 0) {
+          navBar.classList.remove("show");
+        }
       }
 
       // Scroll to section
@@ -1321,6 +1379,9 @@
       // Handle scroll events to track current section
       let scrollTimeout;
       scrollContainer.addEventListener("scroll", () => {
+        // Show nav bar on scroll (mobile)
+        showNavBar();
+
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
           const scrollPosition = scrollContainer.scrollTop;
@@ -1344,6 +1405,10 @@
         dot.addEventListener("click", () => {
           const sectionIndex = parseInt(dot.dataset.section);
           scrollToSection(sectionIndex);
+          // Keep nav visible briefly after click on mobile
+          if (isMobile()) {
+            showNavBar();
+          }
         });
       });
 
@@ -1359,6 +1424,14 @@
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
           scrollToSection(0);
+        }
+      });
+
+      // Handle window resize
+      window.addEventListener("resize", () => {
+        // Remove show class when switching to desktop
+        if (!isMobile()) {
+          navBar.classList.remove("show");
         }
       });
 
