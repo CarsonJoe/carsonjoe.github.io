@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Substrate</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --text: #1a1a1a;
+      --muted: #888;
+      --accent: #1a1a1a;
+      --bg: #fafaf8;
+      --max: 680px;
+    }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 18px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    a:hover { opacity: 0.6; }
+
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Contact bar */
+    .contact {
+      padding: 28px 0;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e8e8e4;
+    }
+
+    .contact a {
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 1px;
+    }
+
+    .contact a:hover { color: var(--text); }
+
+    /* Header */
+    header {
+      padding: 80px 0 56px;
+    }
+
+    header h1 {
+      font-size: 36px;
+      font-weight: normal;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    header .date {
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    header .lede {
+      font-size: 19px;
+      color: #444;
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    /* Divider */
+    .rule {
+      border: none;
+      border-top: 1px solid #e8e8e4;
+      margin: 0;
+    }
+
+    /* Body content */
+    article {
+      padding: 56px 0;
+    }
+
+    section {
+      margin-bottom: 52px;
+    }
+
+    section:last-child { margin-bottom: 0; }
+
+    h2 {
+      font-size: 13px;
+      font-weight: normal;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin-bottom: 1.1em;
+      color: #2a2a2a;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    em { font-style: italic; }
+
+    /* Nested lists styled as tight paragraphs */
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      padding-left: 1.2em;
+      position: relative;
+      margin-bottom: 0.85em;
+      color: #2a2a2a;
+    }
+
+    ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--muted);
+    }
+
+    ul li:last-child { margin-bottom: 0; }
+
+    /* Footer contact */
+    footer {
+      border-top: 1px solid #e8e8e4;
+      padding: 28px 0 48px;
+    }
+
+    @media (max-width: 500px) {
+      body { font-size: 17px; }
+      header h1 { font-size: 28px; }
+      .contact { flex-direction: column; gap: 8px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="contact">
+    <span>Carson Gragg</span>
+    <a href="https://carsongragg.com" target="_blank" rel="noopener">carsongragg.com</a>
+  </nav>
+
+  <header>
+    <p class="date">June 21, 2026</p>
+    <h1>The Substrate</h1>
+    <p class="lede">A shared utility runtime where apps are hosted like SaaS, forkable like open source, and priced like a utility — so useful software can exist because it's useful, without a company behind every line of it.</p>
+  </header>
+
+  <hr class="rule" />
+
+  <article>
+
+    <section>
+      <h2>The Problem</h2>
+      <p>For software's entire history, the expensive part was <em>making</em> it. Writing, designing, and debugging were paid up front; running the finished product was nearly free, since serving one more user cost almost nothing. Every familiar business model — subscriptions, licenses, ads — exists to recover that large up-front cost by spreading it across many users over time.</p>
+      <p>AI is breaking this in two ways at once. First, it collapses the cost of <em>creating</em> software, while the cost of <em>running</em> it does not fall and in many cases increases: every request still burns compute, storage, and bandwidth. Additionally, software that serves AI models carries a more substantial, <em>variable</em> cost per use — a heavy user genuinely costs real money every time they act.</p>
+      <p>Both forces break the same hidden assumption every subscription and ad model quietly depends on: that the marginal cost of one more user is close to zero. When operation is variable and consumption-linked, that amortization fails. Power users bankrupt a flat plan while light users overpay to subsidize them — which is exactly backwards.</p>
+      <p>The consequence is a coming flood of useful software — niche utilities, personal tools, even substantial apps with real users — that costs increasingly little to build but still costs real money to keep alive. Most of it will never justify a company. So it dies — when the maintainer loses interest, moves on, or tires of paying to run something that doesn't directly benefit them. Everyone benefits, a few unpaid people carry the cost, and it runs on goodwill until the goodwill runs out.</p>
+    </section>
+
+    <section>
+      <h2>Why Existing Models Don't Fit</h2>
+      <p><strong>SaaS</strong> assumes a company exists to fund hosting and maintenance indefinitely. It works well for software that can support a company, and leaves everything below that line invisible.</p>
+      <p><strong>Ads</strong> fund software by making the advertiser the customer instead of the user, which bends the product's incentives toward capturing attention rather than usefulness — and toward tracking people across apps to target them. The misalignment is the problem, not advertising as such.</p>
+      <p><strong>Self-hosted open source</strong> is free and forkable, but for a non-technical user — servers, configs, updates, a terminal — it is effectively inaccessible.</p>
+      <p>None of these simply lets a useful thing exist <em>because</em> it's useful. That's the gap The Substrate targets.</p>
+    </section>
+
+    <section>
+      <h2>How It Works</h2>
+      <p><strong>Billing inversion.</strong> Today the developer pays to host and recovers the cost through philanthropy, subscriptions, or ads. The Substrate flips this: each user pays for the usage they personally cause — the reader pays for reads, the writer pays for writes — through one shared wallet. The developer stops carrying an open-ended bill and can go genuinely set-and-forget. Because the user pays directly, nothing in the core model requires ads — the user is the customer by construction, not the product.</p>
+      <p><strong>One wallet, one identity.</strong> A single account and wallet work across every app on the platform. Users top up once and spend across everything, with transparent usage, spend limits, and visibility into how costs are distributed.</p>
+      <p><strong>Dependency-tree revenue splitting.</strong> Because one platform sits in the execution path of every app, it can split an app's revenue down its <em>entire dependency tree</em>. Every library, module, and fork an app is built on can be paid in proportion to its contribution, automatically, each time the software runs.</p>
+      <p><strong>Forkable by default.</strong> Apps and the platform itself are open and forkable. Forks don't sever the value chain — royalties can keep flowing to original contributors — so building on someone's work doesn't cut them out. Ownership of an app can be transferred to a new maintainer, with users and data moving natively, so software can outlive any one person's involvement.</p>
+      <p><strong>Efficient by design.</strong> The runtime is event-driven and scales to zero, so idle apps cost nothing to keep available.</p>
+      <p><strong>Predictable pricing on top of metering.</strong> Raw pay-per-use is mentally taxing, so the platform layers on the classic fixes: the wallet bundles many tiny costs into one top-up; developers can declare flat fees (effectively a subscription) in a manifest; and a free tier — subsidized by heavier users — covers light users.</p>
+    </section>
+
+    <section>
+      <h2>What Each Side Gets</h2>
+      <ul>
+        <li><strong>Users:</strong> one wallet and identity across all apps; pay only for what you use and nothing when idle; transparent, limitable spend; no ads by default; a free baseline allotment.</li>
+        <li><strong>Developers:</strong> distribution, hosting, and billing handled; ship and walk away with no ongoing infrastructure bill; optional revenue through declared flat fees or royalties; earnings whenever their code is used as a dependency by someone else.</li>
+        <li><strong>Organizations:</strong> pay for employees' usage and observe that usage clearly.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>A Bigger Implication</h2>
+      <p>Because apps are forkable, ownership is transferable, and the platform — not any single person — runs the code, The Substrate enables open-source, <em>distributed ownership of large-scale, highly concurrent systems</em>. Software no longer needs one human or company permanently responsible for it in order to keep running. If a maintainer disappears, the service can continue without their permission.</p>
+      <p>The most immediate value is the long tail — the useful software that can't justify a company. But the principle underneath it is not a long-tail property. "The user is the customer" is structural, and the failures of today's largest consumer platforms — feeds optimized for engagement, dating apps that profit when they <em>don't</em> work, value gated behind paywalls that exist to extract rather than to fund — are all downstream of the advertiser or investor being the real customer instead of the person using the product. The same inversion that lets a tiny app exist could let society's most central software exist <em>aligned</em>.</p>
+    </section>
+
+    <section>
+      <h2>The Hard Parts</h2>
+      <ul>
+        <li><strong>Micro-transaction fatigue.</strong> People dislike deciding, repeatedly, whether each tiny charge is worth it. The wallet, declared flat fees, and the free tier are the three mitigations.</li>
+        <li><strong>Fair revenue splitting.</strong> "Pay people by contribution" has a precise mathematical form (the Shapley value), but it is exponential to compute and must be approximated — and once real money flows along it, people will try to game it.</li>
+        <li><strong>Denial of wallet.</strong> If a user's actions cost money, an attacker can try to run up their bill. Caps, limits, and anomaly detection are required — "this app cost me forty dollars overnight" is the failure that must never happen.</li>
+        <li><strong>The central-platform tension.</strong> The metering, fair splits, and shared wallet all require a powerful platform sitting in the middle of everything. That central position is both the source of the value and a contradiction of the open, commons-spirited thing it's meant to serve. The platform has to earn its place by being structurally non-extractive rather than by lock-in.</li>
+        <li><strong>Other open issues.</strong> Trust, safety, and reliability are harder in a shared multi-tenant runtime; some maintenance still works against true set-and-forget; an open-source requirement may undermine genuinely proprietary value; and network effects are very difficult to build from zero.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Why It Has to Be Its Own Company</h2>
+      <p>The platform's whole promise is non-extraction — thin, visible margins, no extractive ad model, the user as customer, money shared rather than captured. These are commitments about incentives, not features, and they can't be bolted onto an entity with an existing extractive business to protect. The Substrate must be built from zero, with the <em>company's</em> structure engineered as carefully as the platform itself: steward ownership, a capped or purpose-bound return, and a charter that hard-codes the core commitments deeply enough that no future board can quietly undo them.</p>
+    </section>
+
+    <section>
+      <h2>Why Now</h2>
+      <ul>
+        <li><strong>The infrastructure is ready.</strong> Running thousands of strangers' apps safely and cheaply, scaling to zero with no idle cost, now exists in production rather than research.</li>
+        <li><strong>The Cambrian explosion of software is here.</strong> AI is producing the wave of useful-but-uncompanyable software that breaks the old funding models — and simultaneously making per-user operation costly and variable, dragging the whole industry toward the usage-based, metered pricing The Substrate is built around.</li>
+        <li><strong>Agents dissolve the micro-transaction objection.</strong> That objection assumes a <em>human</em> paying the mental cost of each tiny decision. Software increasingly operated by agents has no such cost. For machines settling up with each other, pay-per-use stops being a tax on attention and becomes the natural way they transact.</li>
+      </ul>
+      <p style="margin-top: 1.4em; color: #555; font-style: italic;">We are slowly shifting towards a world of abundance. The institutions we built for scarcity will need to be reimagined to meet it one way or another.</p>
+    </section>
+
+  </article>
+
+  <footer>
+    <div class="contact">
+      <span>Carson Gragg</span>
+      <a href="https://carsongragg.com" target="_blank" rel="noopener">carsongragg.com</a>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
